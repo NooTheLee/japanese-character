@@ -1,4 +1,6 @@
 const savedData = JSON.parse(localStorage.getItem("keyValuePairs")) || [];
+let correct = 0,
+  wrong = 0;
 
 const character = [
   { character: "サ", romaji: "sa" },
@@ -53,7 +55,7 @@ const newWords = [
   { character: "しょうかい", romaji: "giới thiệu" },
 ];
 
-const katakana = savedData || newWords;
+const katakana = character;
 
 let currentIndex = 0;
 let isAnswering = true;
@@ -62,6 +64,11 @@ const katakanaCharacter = document.getElementById("katakana-character");
 const answerInput = document.getElementById("answer-input");
 const feedback = document.getElementById("feedback");
 const nextBtn = document.getElementById("next-btn");
+const correctText = document.getElementById("correct");
+const wrongText = document.getElementById("wrong");
+
+correctText.textContent = "Correct: " + correct;
+wrongText.textContent = "Wrong: " + correct;
 
 function showNewKatakana() {
   currentIndex = Math.floor(Math.random() * katakana.length);
@@ -75,14 +82,17 @@ function showNewKatakana() {
 function checkAnswer() {
   const userAnswer = answerInput.value.trim().toLowerCase();
   const romaji = katakana[currentIndex].romaji.toLowerCase();
-  const pinyin = katakana[currentIndex]?.pinyin.toLowerCase();
 
-  if (userAnswer && romaji.includes(userAnswer) || pinyin.includes(userAnswer)) {
-    feedback.textContent = `Đúng rồi! ${pinyin} - ${romaji}`;
+  if (userAnswer === romaji) {
+    feedback.textContent = `Đúng rồi! ${romaji}`;
     feedback.style.color = "green";
+    correct++;
+    correctText.textContent = "Correct: " + correct;
   } else {
-    feedback.textContent = `Sai rồi! Đáp án đúng là: ${pinyin} - ${romaji} `;
+    feedback.textContent = `Sai rồi! Đáp án đúng là: ${romaji} `;
     feedback.style.color = "red";
+    wrong++;
+    wrongText.textContent = "Wrong: " + correct;
   }
   isAnswering = false;
 }
