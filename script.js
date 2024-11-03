@@ -57,6 +57,7 @@ const newWords = [
 
 const katakana = character;
 
+let lastIndex = -1;
 let currentIndex = 0;
 let isAnswering = true;
 
@@ -68,10 +69,13 @@ const correctText = document.getElementById("correct");
 const wrongText = document.getElementById("wrong");
 
 correctText.textContent = "Correct: " + correct;
-wrongText.textContent = "Wrong: " + correct;
+wrongText.textContent = "Wrong: " + wrong;
 
 function showNewKatakana() {
-  currentIndex = Math.floor(Math.random() * katakana.length);
+  while (lastIndex === currentIndex) {
+    currentIndex = Math.floor(Math.random() * katakana.length);
+  }
+  lastIndex = currentIndex;
   katakanaCharacter.textContent = katakana[currentIndex].character;
   feedback.textContent = "";
   answerInput.value = "";
@@ -92,18 +96,15 @@ function checkAnswer() {
     feedback.textContent = `Sai rồi! Đáp án đúng là: ${romaji} `;
     feedback.style.color = "red";
     wrong++;
-    wrongText.textContent = "Wrong: " + correct;
+    wrongText.textContent = "Wrong: " + wrong;
   }
   isAnswering = false;
 }
 
 answerInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
-    if (isAnswering) {
-      checkAnswer();
-    } else {
-      showNewKatakana();
-    }
+    if (isAnswering) checkAnswer();
+    else showNewKatakana();
   }
 });
 
